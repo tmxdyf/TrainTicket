@@ -60,6 +60,7 @@ public class ApiExecutor {
         }
 
 
+
         return Observable.from(list)
                 .flatMap(s ->
                         query(context, date, startStation, s.getValue())//"SZQ"

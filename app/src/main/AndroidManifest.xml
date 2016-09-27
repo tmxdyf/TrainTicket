@@ -2,17 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cy.src.trainticket">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".MyApplication"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.cy.src.trainticket.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,9 +24,11 @@
         </activity>
 
         <service
-            android:name="com.cy.src.trainticket.core.service.TicketService"
+            android:name=".core.service.TicketService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".ui.activity.SelectStationActivity"></activity>
     </application>
 
 </manifest>

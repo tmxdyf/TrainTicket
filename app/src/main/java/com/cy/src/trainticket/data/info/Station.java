@@ -1,10 +1,13 @@
 package com.cy.src.trainticket.data.info;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by CY on 2016/9/26.
  */
 
-public class Station {
+public class Station implements Parcelable {
 
 
     String name;
@@ -2189,4 +2192,31 @@ public class Station {
             new Station("郑州东", "ZAF")};
             */
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.value);
+    }
+
+    protected Station(Parcel in) {
+        this.name = in.readString();
+        this.value = in.readString();
+    }
+
+    public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+        @Override
+        public Station createFromParcel(Parcel source) {
+            return new Station(source);
+        }
+
+        @Override
+        public Station[] newArray(int size) {
+            return new Station[size];
+        }
+    };
 }

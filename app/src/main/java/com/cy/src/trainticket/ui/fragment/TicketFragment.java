@@ -1,6 +1,8 @@
 package com.cy.src.trainticket.ui.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,10 +19,13 @@ import com.cy.src.entity.TicketModel;
 import com.cy.src.trainticket.R;
 import com.cy.src.trainticket.base.RecyclerViewAdapter;
 import com.cy.src.trainticket.data.api.ApiExecutor;
+import com.cy.src.trainticket.data.info.Station;
 import com.cy.src.trainticket.databinding.ItemTicketBinding;
+import com.cy.src.trainticket.ui.activity.SelectStationActivity;
 import com.google.gson.Gson;
 
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * @author CY
@@ -34,6 +39,8 @@ public class TicketFragment extends Fragment {
 
     private TicketAdapter mAdapter;
 
+    private Subscription mSubscription;
+
     public TicketFragment() {
         // Required empty public constructor
     }
@@ -43,7 +50,7 @@ public class TicketFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new TicketAdapter();
-        query();
+        query("SZQ");
     }
 
     @Override
@@ -60,14 +67,40 @@ public class TicketFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mSubscription != null && mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (mSubscription != null && mSubscription.isUnsubscribed()) {
+                mSubscription.unsubscribe();
+            }
+            mAdapter.clear();
+            Station station = data.getParcelableExtra("data");
+            query(station.getValue());
+        }
+    }
+
     private void initView(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mRecyclerView.setAdapter(mAdapter);
+        view.findViewById(R.id.btn_start_station).setOnClickListener(v -> {
+            startActivityForResult(new Intent(getActivity(), SelectStationActivity.class), 1);
+        });
     }
 
-    private void query() {
-
-        new ApiExecutor().queryNextTicket("2016-09-30", getActivity(), "SZQ").subscribe(new Subscriber<TicketModel>() {
+    private void query(String startStation) {
+        if (getView() != null) {
+            getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
+        mSubscription = new ApiExecutor().queryNextTicket("2016-09-30", getActivity(), startStation).subscribe(new Subscriber<TicketModel>() {
 
             @Override
             public void onNext(TicketModel ticketModels) {
@@ -78,6 +111,9 @@ public class TicketFragment extends Fragment {
             public void onCompleted() {
                 Log.e("ApiTest", "query ticket completed");
                 new AlertDialog.Builder(getActivity()).setMessage("查询完成").create().show();
+                if (getView() != null) {
+                    getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
+                }
             }
 
             @Override
