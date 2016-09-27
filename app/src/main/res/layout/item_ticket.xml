@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
 
-</LinearLayout>
+    <data>
+
+        <variable
+            name="ticket"
+            type="com.cy.src.entity.TicketModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+
+            android:id="@+id/tv_start_station"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{ticket.start_station_name}" />
+
+        <TextView
+            android:id="@+id/tv_end_station"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{ticket.end_station_name}" />
+
+        <TextView
+            android:id="@+id/tv_start_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{ticket.start_time}" />
+
+        <TextView
+            android:id="@+id/tv_end_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{ticket.arrive_time}" />
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{ticket.lishi}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:setJson="@{ticket}" />
+    </LinearLayout>
+</layout>

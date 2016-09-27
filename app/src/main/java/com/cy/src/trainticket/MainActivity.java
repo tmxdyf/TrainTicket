@@ -1,14 +1,13 @@
 package com.cy.src.trainticket;
 
 import android.os.Bundle;
-import android.widget.TextView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.cy.src.trainticket.data.api.RequestHelper;
 
@@ -31,16 +30,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+//                ApiTest.queryNextTicket("2016-9-30", getApplication());
             }
         });
 
-    // Example of a call to a native method
-    TextView tv = (TextView) findViewById(R.id.sample_text);
-    tv.setText(stringFromJNI());
+//    // Example of a call to a native method
+//    TextView tv = (TextView) findViewById(R.id.sample_text);
+//    tv.setText(stringFromJNI());
+
     }
 
-    private void test(){
-        RequestHelper.getApiService().getTicket("2016-9-30","SZQ","WHN");
+    private void test() {
+        RequestHelper.getApiService().getTicket("2016-9-30", "SZQ", "WHN");
     }
 
     @Override
@@ -65,14 +66,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
-
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
-    }
+//    /**
+//     * A native method that is implemented by the 'native-lib' native library,
+//     * which is packaged with this application.
+//     */
+//    public native String stringFromJNI();
+//
+//    // Used to load the 'native-lib' library on application startup.
+//    static {
+//        System.loadLibrary("native-lib");
+//    }
 }

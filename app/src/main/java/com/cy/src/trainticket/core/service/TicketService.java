@@ -1,8 +1,27 @@
 package com.cy.src.trainticket.core.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.cy.src.entity.TicketModel;
+import com.cy.src.trainticket.R;
+import com.cy.src.trainticket.data.api.RequestHelper;
+import com.cy.src.trainticket.data.info.Station;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
 
 /**
  * @author CY
@@ -29,18 +48,6 @@ public class TicketService extends Service {
 
         return super.onStartCommand(intent, flags, startId);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -89,7 +96,6 @@ public class TicketService extends Service {
 //    A->B->D->Z
 //    ....
 //    A->B->Y->Z
-
 
 
 }

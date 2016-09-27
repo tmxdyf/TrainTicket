@@ -1,6 +1,8 @@
 package com.cy.src.trainticket.data.model;
 
-import java.sql.Date;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 /**
@@ -9,12 +11,12 @@ import java.util.List;
 
 public class BaseModel<T> {
 
-    String validateMessagesShowId;// "_validatorMessage",
-    boolean status;// true,
-    int httpstatus;// 200,
-    Data<T> data;
-    List messages;
-    String validateMessages;
+    public String validateMessagesShowId;// "_validatorMessage",
+    public boolean status;// true,
+    public int httpstatus;// 200,
+    public Data<T> data;
+    public JsonArray messages;
+    public JsonObject validateMessages;
 
     public String getValidateMessagesShowId() {
         return validateMessagesShowId;
@@ -32,30 +34,42 @@ public class BaseModel<T> {
         return data;
     }
 
-    public List getMessages() {
+    public JsonArray getMessages() {
         return messages;
     }
 
-    public String getValidateMessages() {
+    public JsonObject getValidateMessages() {
         return validateMessages;
     }
 
 
-    public class Data<T> {
+    public static class Data<T> {
         boolean flag;//true,
-        Date searchDate;//": "2016年09月30号&nbsp;&nbsp;周五"
+        String searchDate;//": "2016年09月30号&nbsp;&nbsp;周五"
         List<T> datas;
 
         public boolean isFlag() {
             return flag;
         }
 
-        public Date getSearchDate() {
+        public String getSearchDate() {
             return searchDate;
         }
 
         public List<T> getDatas() {
             return datas;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "BaseModel{" +
+                "validateMessagesShowId='" + validateMessagesShowId + '\'' +
+                ", status=" + status +
+                ", httpstatus=" + httpstatus +
+                ", data=" + data +
+                ", messages=" + messages +
+                ", validateMessages=" + validateMessages +
+                '}';
     }
 }

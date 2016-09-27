@@ -1,7 +1,9 @@
 package com.cy.src.trainticket.data.api;
 
+import com.cy.src.trainticket.data.model.TicketModelList;
+
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -19,7 +21,7 @@ public interface ApiService {
      * @param endstation  终点站 编码
      * @return
      */
-    @GET("/otn/lcxxcx/query?purpose_codes=ADULT&queryDate=/{date}/&from_station=/{startstaion}/&to_station=/{endstation}/")
-    Observable getTicket(@Path("date") String date, String startstaion, String endstation);
+    @GET("/otn/lcxxcx/query?purpose_codes=ADULT")//&queryDate=/{date}/&from_station=/{startstaion}/&to_station=/{endstation}/
+    Observable<TicketModelList> getTicket(@Query("queryDate") String date, @Query("from_station") String startstaion, @Query("to_station") String endstation);
 
 }
