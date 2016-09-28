@@ -30,10 +30,7 @@ public class Station implements Parcelable {
 
     @Override
     public String toString() {
-        return "Station{" +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+        return getName();
     }
 
 

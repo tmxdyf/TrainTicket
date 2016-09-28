@@ -6,19 +6,18 @@ import android.util.Log;
 
 import com.cy.src.entity.TicketModel;
 import com.cy.src.trainticket.R;
-import com.cy.src.trainticket.data.dao.DaoHelper;
 import com.cy.src.trainticket.data.info.Station;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+
+import static com.cy.src.trainticket.StationUtils.loadStation;
 
 
 /**
@@ -28,48 +27,84 @@ import rx.schedulers.Schedulers;
 public class ApiExecutor {
 
 
-    public Observable<TicketModel> queryNextTicket(String date, Context context, String startStation) {
+    public void queryNextTicket(String date, Context context, String startStation, Subscriber<TicketModel> subscriber) {
+        Observable<List<Station>> observable = loadStation(context);
 
-//        Observable<TicketModel> observable = RequestHelper.getApiService().getTicket(date, "SZQ", "WHN");
-//        observable.subscribeOn(Schedulers.newThread()).subscribe(new Action1<TicketModel>() {
-//            @Override
-//            public void call(TicketModel o) {
-//                System.out.println("o=" + o);
-//            }
-//        }, new Action1<Throwable>() {
-//            @Override
-//            public void call(Throwable throwable) {
-//                throwable.printStackTrace();
-//            }
-//        });
+//        平分成8份或者9份，开8,9个线程执行
+        observable.map(stations -> {
 
+            List<List<Station>> allList = new ArrayList<>();
+            int value = stations.size() / 8;
 
-        List<Station> list = new ArrayList<>();
-        try {
-            InputStream inputStream = context.getResources().getAssets().open("station");
-            String station = IOUtils.toString(inputStream);
-            String[] split = station.split(",");
-            for (String s : split) {
-                System.out.println(s);
-                String[] sp = s.split("-");
-                list.add(new Station(sp[0], sp[1]));
+            for (int i = 0; i < 8; i++) {
+
+                int fromIndex = i * value;
+                int toIndex = (i + 1) * value;
+                List<Station> subList = stations.subList(fromIndex, toIndex);
+                allList.add(subList);
             }
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+            if (stations.size() % 8 != 0) {
+                List<Station> subList = stations.subList(value * 8, stations.size());
+                allList.add(subList);
+            }
+            return allList;
+        }).subscribe(lists -> {
+
+            for (List<Station> l : lists) {
+                Log.e("TAG", "============size=" + lists.size());
+                Observable.from(l).flatMap(station -> query(context, date, startStation, station.getValue())).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<TicketModel>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e("TAG", "============onCompleted=");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(TicketModel ticketModel) {
+
+                    }
+                });
+            }
+
+        }, Throwable::printStackTrace);
+
+//         loadStation(context)
+//                .flatMap(new Func1<List<Station>, Observable<TicketModel>>() {
+//                    @Override
+//                    public Observable<TicketModel> call(List<Station> stations) {
+//
+//                        return null;
+//                    }
+//                })
+//                .doOnNext(ticketModel ->
+//                        DaoHelper.getInstance().getDaoSession().getTicketModelDao().insert(ticketModel)
+//                )
+//                .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    public void queryAll(Context context, String date, String startStation, Subscriber<TicketModel> subscriber) {
 
 
+        Observable<List<Station>> observable = loadStation(context);
+        observable.subscribe(stations -> {
+            for (Station station : stations) {
+                query(context, date, startStation, station.getValue())
+                        .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<TicketModel>() {
+                            @Override
+                            public void call(TicketModel ticketModel) {
+                                Log.e("TAG", "============ticketModel=" + ticketModel);
+                            }
+                        }, Throwable::printStackTrace);
+            }
 
-        return Observable.from(list)
-                .flatMap(s ->
-                        query(context, date, startStation, s.getValue())//"SZQ"
-                )
-                .doOnNext(ticketModel ->
-                        DaoHelper.getInstance().getDaoSession().getTicketModelDao().insert(ticketModel)
-                )
-                .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-
+        }, Throwable::printStackTrace);
     }
 
     /**

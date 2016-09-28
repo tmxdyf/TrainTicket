@@ -5,17 +5,24 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.cy.src.trainticket.data.api.RequestHelper;
 
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * @author CY
  * @since 2016-9-23
  */
 public class MainActivity extends AppCompatActivity {
+//    BlockingQueue<Object> mQueue = new ArrayBlockingQueue<>(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,39 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 //                ApiTest.queryNextTicket("2016-9-30", getApplication());
+
+
+//                try {
+                    Log.e("MainActivity", "BlockingQueue pre。。。。");
+//                    mQueue.offer(view,5000, TimeUnit.MILLISECONDS);
+                    Log.e("MainActivity", "BlockingQueue post。。。。");
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+
+                Observable.timer(10000, TimeUnit.MILLISECONDS).subscribe(new Subscriber<Long>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();   Log.e("MainActivity","onStart");
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        Log.e("MainActivity","onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("MainActivity","onError");
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        Log.e("MainActivity","onNext");
+                    }
+                });
             }
         });
 

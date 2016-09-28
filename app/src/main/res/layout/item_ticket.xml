@@ -8,49 +8,117 @@
             type="com.cy.src.entity.TicketModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent" />
 
+        <TextView
             android:id="@+id/tv_start_station"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{ticket.start_station_name}" />
+            android:text="@{ticket.start_station_name,default=@string/app_name}"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_end_station"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{ticket.end_station_name}" />
+            android:text="@{ticket.end_station_name ,default=@string/app_name}"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tv_start_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{ticket.start_time}" />
+            android:text="@{ticket.start_time ,default=@string/app_name}"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_station" />
 
         <TextView
             android:id="@+id/tv_end_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{ticket.arrive_time}" />
+            android:text="@{ticket.arrive_time ,default=@string/app_name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_end_station" />
+
+
+        <TextView
+            android:id="@+id/tv_train_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{ticket.station_train_code ,default=@string/app_name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_duration"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{ticket.lishi}" />
+            android:text="@{ticket.lishi,default=@string/app_name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_train_code" />
 
         <TextView
-            android:visibility="gone"
+            android:id="@+id/tv_yz_num"
+            android:layout_width="wrap_content"
+            app:formatPositionRes="@{@string/yz_num}"
+            app:formatPositionStr="@{ticket.yz_num}"
+            android:layout_height="wrap_content"
+            tools:text="@string/app_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_time" />
+        <!--android:text="@{ticket.yz_num,default=@string/app_name}"-->
+
+        <TextView
+            android:id="@+id/tv_wz_num"
+            app:formatPositionRes="@{@string/wz_num}"
+            app:formatPositionStr="@{ticket.wz_num}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+
+            app:layout_constraintStart_toEndOf="@id/tv_yz_num"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_time" />
+        <!--android:text="@{ticket.wz_num,default=@string/app_name}"-->
+        <TextView
+            app:formatPositionRes="@{@string/ze_num}"
+            app:formatPositionStr="@{ticket.ze_num}"
+            android:id="@+id/tv_ze_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintStart_toEndOf="@id/tv_wz_num"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_time" />
+        <!--android:text="@{ticket.ze_num,default=@string/app_name}"-->
+
+        <TextView
+            android:id="@+id/tv_yw_num"
+            app:formatPositionRes="@{@string/yw_num}"
+            app:formatPositionStr="@{ticket.yw_num}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintStart_toEndOf="@id/tv_ze_num"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_time" />
+        <!--android:text="@{ticket.yw_num,default=@string/app_name}"-->
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:visibility="gone"
             app:setJson="@{ticket}" />
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

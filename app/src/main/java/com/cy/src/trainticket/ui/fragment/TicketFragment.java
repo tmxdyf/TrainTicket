@@ -50,7 +50,7 @@ public class TicketFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new TicketAdapter();
-        query("SZQ");
+//        query("SZQ");
     }
 
     @Override
@@ -100,7 +100,8 @@ public class TicketFragment extends Fragment {
         if (getView() != null) {
             getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         }
-        mSubscription = new ApiExecutor().queryNextTicket("2016-09-30", getActivity(), startStation).subscribe(new Subscriber<TicketModel>() {
+
+        Subscriber<TicketModel> subscriber = new Subscriber<TicketModel>() {
 
             @Override
             public void onNext(TicketModel ticketModels) {
@@ -110,9 +111,10 @@ public class TicketFragment extends Fragment {
             @Override
             public void onCompleted() {
                 Log.e("ApiTest", "query ticket completed");
-                new AlertDialog.Builder(getActivity()).setMessage("查询完成").create().show();
-                if (getView() != null) {
+
+                if (getView() != null && getActivity() != null) {
                     getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    new AlertDialog.Builder(getActivity()).setMessage("查询完成").create().show();
                 }
             }
 
@@ -121,7 +123,8 @@ public class TicketFragment extends Fragment {
                 e.printStackTrace();
             }
 
-        });
+        };
+        new ApiExecutor().queryAll(getActivity(), "2016-09-30", startStation, subscriber);
     }
 
 
@@ -151,13 +154,33 @@ public class TicketFragment extends Fragment {
 
             public void setData(int position, TicketModel model) {
                 mBinding.setTicket(model);
+
+//                mBinding.tvYzNum.setText(format(R.string.yz_num, model.yz_num));
+//                mBinding.tvWzNum.setText(format(R.string.wz_num, model.wz_num));
+//                mBinding.tvYwNum.setText(format(R.string.yw_num, model.yw_num));
+//                mBinding.tvZeNum.setText(format(R.string.ze_num, model.ze_num));
+            }
+
+
+            @BindingAdapter({"formatPositionRes", "formatPositionStr"})
+            public static void format(TextView tv, String res, String str) {
+                String[] strings = tv.getResources().getStringArray(R.array.compares);
+                for (String compare : strings) {
+                    if (compare.equals(str)) {
+                        str = "0";
+                        break;
+                    }
+                }
+                tv.setText(String.format(res, str));
             }
 
             @BindingAdapter("setJson")
             public static void setJson(TextView textView, TicketModel model) {
 
                 textView.setText(new Gson().toJson(model));
+
             }
+
         }
     }
 }

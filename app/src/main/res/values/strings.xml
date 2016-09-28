@@ -10,4 +10,9 @@
         <item>--</item>
         <item>无</item>
     </string-array>
+
+    <string name="yz_num">硬座:%s 张</string>
+    <string name="wz_num">无座:%s 张</string>
+    <string name="yw_num">硬卧:%s 张</string>
+    <string name="ze_num">二等座:%s 张</string>
 </resources>
